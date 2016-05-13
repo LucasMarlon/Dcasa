@@ -1,4 +1,4 @@
-package projeto.emp.dcasa;
+package projeto.emp.dcasa.views;
 
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
@@ -12,9 +12,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.techacademy.demomaps.R;
+import projeto.emp.dcasa.R;
 
 public class MapsActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -47,11 +48,15 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
         //mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude)).title("Current Location"));
-        MarkerOptions options = new MarkerOptions()
-                .position(latLng)
-                .title("I am here!");
-        mMap.addMarker(options);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+//        MarkerOptions options = new MarkerOptions()
+//                .position(latLng)
+//                .title("I am here!");
+//        mMap.addMarker(options);
+        mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude))
+                .title("Minha localização")
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.user_location_icon)));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
     }
 
 
@@ -59,16 +64,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
-    }
-
-    public void changeType(View view)
-    {
-        if(mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL)
-        {
-            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        }
-        else
-            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
     private void setUpMapIfNeeded() {
@@ -85,15 +80,13 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     }
 
     private void setUpMap() {
-//        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-        mMap.setMyLocationEnabled(true);
-
-
+//      mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        mMap.setMyLocationEnabled(false); //se colocar false, sai o ponto azul e o botão para dar zoom
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        mLastLocation =  LocationServices . FusedLocationApi . getLastLocation (
+        mLastLocation =  LocationServices.FusedLocationApi.getLastLocation (
                 mGoogleApiClient );
         if  ( mLastLocation !=  null )  {
             handleNewLocation(mLastLocation);
@@ -103,22 +96,18 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
+    public void onConnectionSuspended(int i) { }
 
-    }
-
-    protected  void onStart ()  {
-        mGoogleApiClient . connect();
-        super . onStart();
+    protected  void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
     }
 
     protected  void onStop ()  {
-        mGoogleApiClient . disconnect ();
-        super . onStop ();
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
+    public void onConnectionFailed(ConnectionResult connectionResult) { }
 }
