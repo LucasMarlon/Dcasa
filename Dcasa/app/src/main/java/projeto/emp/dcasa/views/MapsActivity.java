@@ -1,5 +1,7 @@
 package projeto.emp.dcasa.views;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -15,7 +17,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import projeto.emp.dcasa.R;
+import projeto.emp.dcasa.models.PROFESSIONAL_TYPE;
+import projeto.emp.dcasa.models.Professional;
 
 public class MapsActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -23,6 +32,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     public static final String TAG = MapsActivity.class.getSimpleName();
+    private List<Professional> professionals;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +47,19 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                     . addApi ( LocationServices. API )
                     . build ();
         }
+
+        professionals = criaProfissionais();
+    }
+
+    private List<Professional> criaProfissionais() {
+        List<Professional> professionals = new ArrayList<Professional>();
+        Professional prof = new Professional();
+        prof.setNome("José Luiz");
+        prof.setType(PROFESSIONAL_TYPE.ELECTRICIAN);
+        prof.setLocation(new Location("Rua Rodrigues Alves Campina Grande"));
+        professionals.add(prof);
+
+        return professionals;
     }
 
     private void handleNewLocation(Location location) {
@@ -57,6 +80,55 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.user_location_icon)));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
+    }
+
+    private void handleLocationsProfessionals(Professional professinal) {
+        Log.d(TAG, professinal.getLocation().toString());
+
+        double latitude = professinal.getLocation().getLatitude();
+        double longitude = professinal.getLocation().getLongitude();
+
+        Log.i("LOCATION", getLatLng(professinal.getLocation().getProvider()).longitude + "");
+        Log.i("LOCATIONSS", getLatLng(professinal.getLocation().getProvider()).latitude+"");
+
+        if (professinal.getType().equals(PROFESSIONAL_TYPE.ELECTRICIAN)) {
+            mMap.addMarker(new MarkerOptions().position(getLatLng(professinal.getLocation().getProvider()))
+                    .title(professinal.getNome())
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.electrician_location_icon)));
+
+        } else if (professinal.getType().equals(PROFESSIONAL_TYPE.PLUMBER)) {
+            mMap.addMarker(new MarkerOptions().position(getLatLng(professinal.getLocation().getProvider()))
+                    .title(professinal.getNome())
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.plumber_location_icon)));
+
+        } else if (professinal.getType().equals(PROFESSIONAL_TYPE.FITTER)) {
+            mMap.addMarker(new MarkerOptions().position(getLatLng(professinal.getLocation().getProvider()))
+                    .title(professinal.getNome())
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.fitter_location_icon)));
+        }
+    }
+
+    public LatLng getLatLng(String location){
+
+        List<Address> addressList = null;
+        if(location != null || !location.equals(""))
+        {
+            Geocoder geocoder = new Geocoder(this);
+            try {
+                addressList = geocoder.getFromLocationName(location , 1);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Address address = addressList.get(0);
+            LatLng latLng = new LatLng(address.getLatitude() , address.getLongitude());
+
+            return latLng;
+
+        }
+        return new LatLng(0, 0);
     }
 
 
@@ -90,6 +162,9 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 mGoogleApiClient );
         if  ( mLastLocation !=  null )  {
             handleNewLocation(mLastLocation);
+            for (Professional p : professionals) {
+                handleLocationsProfessionals(p);
+            }
         } else {
             Log.i("MY LOCATION", "NULL");
         }

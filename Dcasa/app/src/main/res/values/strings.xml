@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">decasa</string>
-    <string name="title_activity_maps">Mapa</string>
+    <string name="app_name">Decasa</string>
+    <string name="title_activity_app">Decasa</string>
 </resources>
