@@ -1,10 +1,12 @@
 package projeto.emp.dcasa.views;
 
+import android.app.ActionBar;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 
@@ -26,7 +28,7 @@ import projeto.emp.dcasa.R;
 import projeto.emp.dcasa.models.PROFESSIONAL_TYPE;
 import projeto.emp.dcasa.models.Professional;
 
-public class MapsActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MapsActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private GoogleApiClient mGoogleApiClient;
@@ -49,15 +51,32 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         }
 
         professionals = criaProfissionais();
+
+        final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setCustomView(R.layout.actionbar_custom_view);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
     }
 
     private List<Professional> criaProfissionais() {
         List<Professional> professionals = new ArrayList<Professional>();
-        Professional prof = new Professional();
-        prof.setNome("José Luiz");
-        prof.setType(PROFESSIONAL_TYPE.ELECTRICIAN);
-        prof.setLocation(new Location("Rua Rodrigues Alves Campina Grande"));
-        professionals.add(prof);
+        Professional elec = new Professional();
+        elec.setNome("José Luiz");
+        elec.setType(PROFESSIONAL_TYPE.ELECTRICIAN);
+        elec.setLocation(new Location("Rua Rodrigues Alves Campina Grande"));
+        professionals.add(elec);
+
+        Professional plum = new Professional();
+        plum.setNome("João Melo");
+        plum.setType(PROFESSIONAL_TYPE.PLUMBER);
+        plum.setLocation(new Location("Avenida Juvênio Arruda Campina Grande"));
+        professionals.add(plum);
+
+        Professional fitter = new Professional();
+        fitter.setNome("Severino Miguel");
+        fitter.setType(PROFESSIONAL_TYPE.FITTER);
+        fitter.setLocation(new Location("Avenida Dr. Francisco Pinto Campina Grande"));
+        professionals.add(fitter);
 
         return professionals;
     }
