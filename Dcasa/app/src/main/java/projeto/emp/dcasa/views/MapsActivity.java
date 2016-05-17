@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -35,12 +36,18 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
     private Location mLastLocation;
     public static final String TAG = MapsActivity.class.getSimpleName();
     private List<Professional> professionals;
+    private ImageButton ib_electrician;
+    private ImageButton ib_fitter;
+    private ImageButton ib_plumber;
+    private Boolean image_pressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+
+        image_pressed = true;
 
         if  ( mGoogleApiClient ==  null )  {
             mGoogleApiClient =  new  GoogleApiClient. Builder ( this )
@@ -52,10 +59,52 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
 
         professionals = criaProfissionais();
 
-        final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setCustomView(R.layout.actionbar_custom_view);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
+//        final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+//        actionBar.setCustomView(R.layout.actionbar_custom_view);
+//        actionBar.setDisplayShowTitleEnabled(false);
+//        actionBar.setDisplayShowCustomEnabled(true);
+
+        ib_electrician = (ImageButton) findViewById(R.id.ib_electrician);
+        ib_electrician.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (image_pressed) {
+                    image_pressed = false;
+                    ib_electrician.setImageResource(R.mipmap.light_blue_electrician_button);
+                } else if (image_pressed == false) {
+                    image_pressed = true;
+                    ib_electrician.setImageResource(R.mipmap.dark_blue_electrician_button);
+                }
+            }
+        });
+
+        ib_fitter = (ImageButton) findViewById(R.id.ib_fitter);
+        ib_fitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (image_pressed) {
+                    image_pressed = false;
+                    ib_fitter.setImageResource(R.mipmap.light_blue_fitter_button);
+                } else if (image_pressed == false) {
+                    image_pressed = true;
+                    ib_fitter.setImageResource(R.mipmap.dark_blue_fitter_button);
+                }
+            }
+        });
+
+        ib_plumber = (ImageButton) findViewById(R.id.ib_plumber);
+        ib_plumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (image_pressed) {
+                    image_pressed = false;
+                    ib_plumber.setImageResource(R.mipmap.light_blue_plumber_button);
+                } else if (image_pressed == false) {
+                    image_pressed = true;
+                    ib_plumber.setImageResource(R.mipmap.dark_blue_plumber_button);
+                }
+            }
+        });
     }
 
     private List<Professional> criaProfissionais() {
