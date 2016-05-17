@@ -1,10 +1,8 @@
 package projeto.emp.dcasa.views;
 
-import android.app.ActionBar;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -36,10 +34,14 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
     private Location mLastLocation;
     public static final String TAG = MapsActivity.class.getSimpleName();
     private List<Professional> professionals;
+    private List<Professional> professionalsSelected;
+    List<PROFESSIONAL_TYPE> typesList;
     private ImageButton ib_electrician;
     private ImageButton ib_fitter;
     private ImageButton ib_plumber;
-    private Boolean image_pressed;
+    private Boolean electrician_pressed;
+    private Boolean plumber_pressed;
+    private Boolean fitter_pressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,13 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
 
-        image_pressed = true;
+        electrician_pressed = true;
+        plumber_pressed = true;
+        fitter_pressed = true;
+        typesList = new ArrayList<PROFESSIONAL_TYPE>();
+        typesList.add(PROFESSIONAL_TYPE.ELECTRICIAN);
+        typesList.add(PROFESSIONAL_TYPE.FITTER);
+        typesList.add(PROFESSIONAL_TYPE.PLUMBER);
 
         if  ( mGoogleApiClient ==  null )  {
             mGoogleApiClient =  new  GoogleApiClient. Builder ( this )
@@ -68,12 +76,14 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
         ib_electrician.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (image_pressed) {
-                    image_pressed = false;
+                if (electrician_pressed) {
+                    electrician_pressed = false;
                     ib_electrician.setImageResource(R.mipmap.light_blue_electrician_button);
-                } else if (image_pressed == false) {
-                    image_pressed = true;
+                    deleteTypeFromSelecteds(PROFESSIONAL_TYPE.ELECTRICIAN);
+                } else if (!electrician_pressed) {
+                    electrician_pressed = true;
                     ib_electrician.setImageResource(R.mipmap.dark_blue_electrician_button);
+                    addTypeToSelecteds(PROFESSIONAL_TYPE.ELECTRICIAN);
                 }
             }
         });
@@ -82,12 +92,14 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
         ib_fitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (image_pressed) {
-                    image_pressed = false;
+                if (fitter_pressed) {
+                    fitter_pressed = false;
                     ib_fitter.setImageResource(R.mipmap.light_blue_fitter_button);
-                } else if (image_pressed == false) {
-                    image_pressed = true;
+                    deleteTypeFromSelecteds(PROFESSIONAL_TYPE.FITTER);
+                } else if (!fitter_pressed) {
+                    fitter_pressed = true;
                     ib_fitter.setImageResource(R.mipmap.dark_blue_fitter_button);
+                    addTypeToSelecteds(PROFESSIONAL_TYPE.FITTER);
                 }
             }
         });
@@ -96,16 +108,42 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
         ib_plumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (image_pressed) {
-                    image_pressed = false;
+                if (plumber_pressed) {
+                    plumber_pressed = false;
                     ib_plumber.setImageResource(R.mipmap.light_blue_plumber_button);
-                } else if (image_pressed == false) {
-                    image_pressed = true;
+                    deleteTypeFromSelecteds(PROFESSIONAL_TYPE.PLUMBER);
+                } else if (!plumber_pressed) {
+                    plumber_pressed = true;
                     ib_plumber.setImageResource(R.mipmap.dark_blue_plumber_button);
+                    addTypeToSelecteds(PROFESSIONAL_TYPE.PLUMBER);
                 }
             }
         });
     }
+
+    private void loadProfessionalsSelected() {
+        professionalsSelected = new ArrayList<Professional>();
+        for (PROFESSIONAL_TYPE type : typesList) {
+            for (Professional professional: professionals) {
+                if(professional.getType().equals(type)) {
+                    professionalsSelected.add(professional);
+                }
+            }
+        }
+        loadLocationsOnMap();
+    }
+
+
+    private void addTypeToSelecteds(PROFESSIONAL_TYPE type) {
+        typesList.add(type);
+        loadProfessionalsSelected();
+    }
+
+    private void deleteTypeFromSelecteds(PROFESSIONAL_TYPE type) {
+        typesList.remove(type);
+        loadProfessionalsSelected();
+    }
+
 
     private List<Professional> criaProfissionais() {
         List<Professional> professionals = new ArrayList<Professional>();
@@ -150,33 +188,33 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
     }
 
-    private void handleLocationsProfessionals(Professional professinal) {
-        Log.d(TAG, professinal.getLocation().toString());
+    private void handleLocationsProfessionals(Professional professional) {
+        Log.d(TAG, professional.getLocation().toString());
+        LatLng latLng;
+        if (professional.getLocation().getLongitude() == 0d || professional.getLocation().getLatitude() == 0d) {
+            latLng = getLatLng(professional.getLocation().getProvider(), professional);
+        } else {
+           latLng = new LatLng(professional.getLocation().getLatitude(),professional.getLocation().getLongitude());
+        }
 
-        double latitude = professinal.getLocation().getLatitude();
-        double longitude = professinal.getLocation().getLongitude();
-
-        Log.i("LOCATION", getLatLng(professinal.getLocation().getProvider()).longitude + "");
-        Log.i("LOCATIONSS", getLatLng(professinal.getLocation().getProvider()).latitude+"");
-
-        if (professinal.getType().equals(PROFESSIONAL_TYPE.ELECTRICIAN)) {
-            mMap.addMarker(new MarkerOptions().position(getLatLng(professinal.getLocation().getProvider()))
-                    .title(professinal.getNome())
+        if (professional.getType().equals(PROFESSIONAL_TYPE.ELECTRICIAN)) {
+            mMap.addMarker(new MarkerOptions().position(latLng)
+                    .title(professional.getNome())
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.electrician_location_icon)));
 
-        } else if (professinal.getType().equals(PROFESSIONAL_TYPE.PLUMBER)) {
-            mMap.addMarker(new MarkerOptions().position(getLatLng(professinal.getLocation().getProvider()))
-                    .title(professinal.getNome())
+        } else if (professional.getType().equals(PROFESSIONAL_TYPE.PLUMBER)) {
+            mMap.addMarker(new MarkerOptions().position(latLng)
+                    .title(professional.getNome())
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.plumber_location_icon)));
 
-        } else if (professinal.getType().equals(PROFESSIONAL_TYPE.FITTER)) {
-            mMap.addMarker(new MarkerOptions().position(getLatLng(professinal.getLocation().getProvider()))
-                    .title(professinal.getNome())
+        } else if (professional.getType().equals(PROFESSIONAL_TYPE.FITTER)) {
+            mMap.addMarker(new MarkerOptions().position(latLng)
+                    .title(professional.getNome())
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.fitter_location_icon)));
         }
     }
 
-    public LatLng getLatLng(String location){
+    public LatLng getLatLng(String location, Professional professional){
 
         List<Address> addressList = null;
         if(location != null || !location.equals(""))
@@ -191,6 +229,8 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
             }
 
             Address address = addressList.get(0);
+            professional.getLocation().setLatitude(address.getLatitude());
+            professional.getLocation().setLatitude(address.getLongitude());
             LatLng latLng = new LatLng(address.getLatitude() , address.getLongitude());
 
             return latLng;
@@ -226,16 +266,25 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
 
     @Override
     public void onConnected(Bundle bundle) {
-        mLastLocation =  LocationServices.FusedLocationApi.getLastLocation (
-                mGoogleApiClient );
+        loadProfessionalsSelected();
+    }
+
+    private void loadLocationsOnMap() {
+        mMap.clear();
+        if (mLastLocation == null) {
+            mLastLocation =  LocationServices.FusedLocationApi.getLastLocation (
+                    mGoogleApiClient );
+        }
+
         if  ( mLastLocation !=  null )  {
-            handleNewLocation(mLastLocation);
-            for (Professional p : professionals) {
+            for (Professional p : professionalsSelected) {
                 handleLocationsProfessionals(p);
             }
+            handleNewLocation(mLastLocation);
         } else {
             Log.i("MY LOCATION", "NULL");
         }
+
     }
 
     @Override
