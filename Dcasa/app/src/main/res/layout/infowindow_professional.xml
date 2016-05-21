@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:minWidth="700px">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <projeto.emp.dcasa.views.RoundedImageView
+            android:id="@+id/iv_professional"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_marginTop="10dp"
+            android:layout_centerInParent="true"
+            android:layout_weight="35"/>
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_weight="65">
+
+            <TextView
+                android:text="TESTE"
+                android:id="@+id/tv_profession"
+                android:textStyle="bold"
+                android:textColor="@color/colorBlue"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_width="match_parent"
+                android:gravity="left"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:text="TESTE"
+                android:textColor="@color/grey"
+                android:textStyle="bold"
+                android:id="@+id/tv_name_professional"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_width="match_parent"
+                android:gravity="left"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:text="TESTE"
+                android:id="@+id/tv_cpf"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey"
+                android:textSize="15dp"
+                android:layout_width="match_parent"
+                android:gravity="left"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:text="83987682286"
+                android:id="@+id/tv_phone"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey"
+                android:textSize="15dp"
+                android:layout_width="match_parent"
+                android:gravity="left"
+                android:layout_marginBottom="10dp"/>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_weight="100"
+    android:layout_marginTop="10dp">
+
+        <TextView
+            android:text="Avaliações"
+            android:textSize="20dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_marginTop="23dp"
+            android:layout_weight="35"/>
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/evaluataion_bar"
+            style="@style/StarRatingBar"
+            android:stepSize="1"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_weight="100"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/btn_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="@string/call"
+            android:layout_weight="90"
+            android:gravity="center"
+            android:textAllCaps="false"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp"
+            android:background="@drawable/screen_border"/>
+
+    </LinearLayout>
+</LinearLayout>

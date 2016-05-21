@@ -14,9 +14,14 @@
 
     </style>
 
+    <style name="StarRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@mipmap/ic_evaluation</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:maxHeight">48dip</item>
+    </style>
+
     <style name="Theme.MyThemeBottom" parent="AppTheme">
         <item name="colorPrimary">@android:color/white</item>
-
     </style>
 
 </resources>

@@ -1,13 +1,17 @@
 package projeto.emp.dcasa.views;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -17,6 +21,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -42,6 +47,8 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
     private Boolean electrician_pressed;
     private Boolean plumber_pressed;
     private Boolean fitter_pressed;
+    private Button btn_call;
+    private View infoWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +126,7 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
                 }
             }
         });
+
     }
 
     private void loadProfessionalsSelected() {
@@ -260,9 +268,38 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     private void setUpMap() {
-//      mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                if (!marker.getTitle().equals("Minha localização")) {
+                    infoWindow = getLayoutInflater().inflate(R.layout.infowindow_professional, null);
+                    btn_call = (Button) infoWindow.findViewById(R.id.btn_call);
+                    btn_call.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            TextView tv = (TextView)infoWindow.findViewById(R.id.tv_phone);
+                            Log.d("CLICK", "Clicou!");
+
+                            String number = tv.getText().toString();
+
+
+                            Uri uri = Uri.parse("tel:"+number);
+                            Intent intent = new Intent(Intent.ACTION_DIAL,uri);
+                            startActivity(intent);
+                        }
+                    });
+                }
+                return infoWindow;
+            }
+        });
         mMap.setMyLocationEnabled(false); //se colocar false, sai o ponto azul e o botão para dar zoom
     }
+
 
     @Override
     public void onConnected(Bundle bundle) {

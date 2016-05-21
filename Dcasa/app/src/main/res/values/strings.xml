@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">decasa</string>
     <string name="title_activity_app">decasa</string>
+    <string name="call">LIGAR</string>
 </resources>
