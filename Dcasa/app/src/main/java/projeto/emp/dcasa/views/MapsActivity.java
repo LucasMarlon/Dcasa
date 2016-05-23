@@ -12,19 +12,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +31,7 @@ import java.util.List;
 import projeto.emp.dcasa.R;
 import projeto.emp.dcasa.models.PROFESSIONAL_TYPE;
 import projeto.emp.dcasa.models.Professional;
+import projeto.emp.dcasa.models.User;
 import projeto.emp.dcasa.utils.MainMapFragment;
 
 public class MapsActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -165,12 +163,14 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
 
     private List<Professional> criaProfissionais() {
         List<Professional> professionals = new ArrayList<Professional>();
+        User user = new User(new Location("Rua das Uburanas, Campina Grande"),"Maria");
         Professional elec = new Professional();
         elec.setName("José Luiz");
         elec.setType(PROFESSIONAL_TYPE.ELECTRICIAN);
         elec.setLocation(new Location("Rua Rodrigues Alves Campina Grande"));
         elec.setCpf("486.136.632-14");
         elec.setPhone_number("(83)98645-4545");
+        elec.addEvaluation(user, 3);
         professionals.add(elec);
 
         Professional plum = new Professional();
@@ -179,14 +179,16 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
         plum.setLocation(new Location("Avenida Juvênio Arruda Campina Grande"));
         plum.setCpf("576.373.113-17");
         plum.setPhone_number("(83)98645-8888");
+        plum.addEvaluation(user, 4);
         professionals.add(plum);
 
         Professional fitter = new Professional();
         fitter.setName("Severino Miguel");
         fitter.setType(PROFESSIONAL_TYPE.FITTER);
         fitter.setLocation(new Location("Avenida Dr. Francisco Pinto Campina Grande"));
-        plum.setCpf("051.276.452-20");
-        plum.setPhone_number("(83)98645-8080");
+        fitter.setCpf("051.276.452-20");
+        fitter.setPhone_number("(83)98645-8080");
+        fitter.addEvaluation(user, 5);
         professionals.add(fitter);
 
         return professionals;
@@ -315,6 +317,12 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
 
                     tv_phone_number = (TextView) infoWindow.findViewById(R.id.tv_phone_number);
                     tv_phone_number.setText(professionalInfo.getPhone_number());
+
+
+                    RatingBar rate_bar = (RatingBar) infoWindow.findViewById(R.id.evaluataion_bar);
+
+                    rate_bar.setRating(professionalInfo.getAverageEvaluations());
+                    Log.d("Rating", professionalInfo.getAverageEvaluations()+"");
 
                     btn_call = (Button) infoWindow.findViewById(R.id.btn_call);
                     btn_call.setOnClickListener(new View.OnClickListener() {

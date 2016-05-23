@@ -2,6 +2,7 @@ package projeto.emp.dcasa.models;
 
 import android.location.Location;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,11 @@ public class Professional {
     private Map<User, String> comments;
     private Map<User, Integer> evaluations;
     private PROFESSIONAL_TYPE type;
+
+    public Professional() {
+        this.comments = new HashMap<User, String>();
+        this.evaluations = new HashMap<User, Integer>();
+    }
 
     public void setLocation(Location location) {
         this.location = location;
@@ -31,9 +37,16 @@ public class Professional {
         return location;
     }
 
-    public Double calculatesAverageEvaluations () {
-        //TODO
-        return null;
+    public Float getAverageEvaluations () {
+        Integer sum = 0;
+        for (Integer eval : evaluations.values()) {
+            sum += eval;
+        }
+        float media = 0;
+        if (evaluations.size() > 0) {
+            media = sum/evaluations.size();
+        }
+        return media;
     }
 
     public String getCpf() {
@@ -50,6 +63,10 @@ public class Professional {
 
     public void setEvaluations(Map<User, Integer> evaluations) {
         this.evaluations = evaluations;
+    }
+
+    public void addEvaluation(User user, Integer evaluation) {
+        evaluations.put(user, evaluation);
     }
 
     public Map<User, String> getComments() {

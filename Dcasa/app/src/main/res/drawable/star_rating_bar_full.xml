@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/background"
-        android:drawable="@mipmap/ic_evaluation_up" />
-    <item android:id="@+id/secondaryProgress"
-        android:drawable="@mipmap/ic_evaluation_up" />
-    <item android:id="@+id/progress"
-        android:drawable="@mipmap/ic_evaluation_up" />
+    <item android:id="@android:id/background"
+        android:drawable="@drawable/ratin_bar_empty" />
+    <item android:id="@android:id/secondaryProgress"
+        android:drawable="@drawable/ratin_bar_empty" />
+    <item android:id="@android:id/progress"
+        android:drawable="@drawable/star_rating_bar_filled" />
 </layer-list>
