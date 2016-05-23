@@ -9,7 +9,8 @@ public class Professional {
 
     private Location location;
     private String phone_number;
-    private String nome;
+    private String name;
+    private String cpf;
     private Map<User, String> comments;
     private Map<User, Integer> evaluations;
     private PROFESSIONAL_TYPE type;
@@ -35,6 +36,14 @@ public class Professional {
         return null;
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     public Map<User, Integer> getEvaluations() {
         return evaluations;
     }
@@ -51,12 +60,12 @@ public class Professional {
         this.comments = comments;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public PROFESSIONAL_TYPE getType() {

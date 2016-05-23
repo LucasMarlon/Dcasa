@@ -18,21 +18,21 @@ public class MainMapFragment extends MapFragment {
         Marker m = null;
         if (profInfo.getType().equals(PROFESSIONAL_TYPE.ELECTRICIAN)) {
             m = getMap().addMarker(new MarkerOptions()
-                    .title(profInfo.getNome())
+                    .title(profInfo.getName())
                     .snippet(profInfo.getPhone_number())
                     .position(latLng)
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.electrician_location_icon)));
 
         } else if (profInfo.getType().equals(PROFESSIONAL_TYPE.PLUMBER)) {
             m = getMap().addMarker(new MarkerOptions()
-                    .title(profInfo.getNome())
+                    .title(profInfo.getName())
                     .snippet(profInfo.getPhone_number())
                     .position(latLng)
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.plumber_location_icon)));
 
         } else if (profInfo.getType().equals(PROFESSIONAL_TYPE.FITTER)) {
             m = getMap().addMarker(new MarkerOptions()
-                    .title(profInfo.getNome())
+                    .title(profInfo.getName())
                     .snippet(profInfo.getPhone_number())
                     .position(latLng)
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.fitter_location_icon)));

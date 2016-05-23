@@ -53,6 +53,9 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
     private Boolean fitter_pressed;
     private Button btn_call;
     private TextView tv_profession;
+    private TextView tv_name_professional;
+    private TextView tv_cpf;
+    private TextView tv_phone_number;
     private View infoWindow;
 
     private MainMapFragment mapFragment;
@@ -163,21 +166,27 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
     private List<Professional> criaProfissionais() {
         List<Professional> professionals = new ArrayList<Professional>();
         Professional elec = new Professional();
-        elec.setNome("José Luiz");
+        elec.setName("José Luiz");
         elec.setType(PROFESSIONAL_TYPE.ELECTRICIAN);
         elec.setLocation(new Location("Rua Rodrigues Alves Campina Grande"));
+        elec.setCpf("486.136.632-14");
+        elec.setPhone_number("(83)98645-4545");
         professionals.add(elec);
 
         Professional plum = new Professional();
-        plum.setNome("João Melo");
+        plum.setName("João Melo");
         plum.setType(PROFESSIONAL_TYPE.PLUMBER);
         plum.setLocation(new Location("Avenida Juvênio Arruda Campina Grande"));
+        plum.setCpf("576.373.113-17");
+        plum.setPhone_number("(83)98645-8888");
         professionals.add(plum);
 
         Professional fitter = new Professional();
-        fitter.setNome("Severino Miguel");
+        fitter.setName("Severino Miguel");
         fitter.setType(PROFESSIONAL_TYPE.FITTER);
         fitter.setLocation(new Location("Avenida Dr. Francisco Pinto Campina Grande"));
+        plum.setCpf("051.276.452-20");
+        plum.setPhone_number("(83)98645-8080");
         professionals.add(fitter);
 
         return professionals;
@@ -281,47 +290,49 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
             professionalMarkerMap.put(marker, prof);
         }
 
-
-        //add the onClickInfoWindowListener
-        mapFragment.getMap().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+        mapFragment.getMap().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
 
-            public void onInfoWindowClick(Marker marker) {
+            @Override
+            public View getInfoContents(Marker marker) {
                 final Professional professionalInfo = professionalMarkerMap.get(marker);
-//                Toast.makeText(getBaseContext(),
-//                        "Nome do professional " + professionalInfo.getNome() + " , " + professionalInfo.getPhone_number(),
-//                        Toast.LENGTH_LONG).show();
-                mapFragment.getMap().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                    @Override
-                    public View getInfoWindow(Marker marker) {
-                        return null;
-                    }
+                infoWindow = null;
 
-                    @Override
-                    public View getInfoContents(Marker marker) {
-                        if (!marker.getTitle().equals("Minha localização")) {
-                            infoWindow = getLayoutInflater().inflate(R.layout.infowindow_professional, null);
-                            tv_profession = (TextView) infoWindow.findViewById(R.id.tv_profession);
-                            tv_profession.setText(professionalInfo.getType().getType());
-                            btn_call = (Button) infoWindow.findViewById(R.id.btn_call);
-                            btn_call.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    TextView tv = (TextView) infoWindow.findViewById(R.id.tv_phone);
-                                    Log.d("CLICK", "Clicou!");
+                if (!marker.getTitle().equals("Minha localização")) {
+                    infoWindow = getLayoutInflater().inflate(R.layout.infowindow_professional, null);
 
-                                    String number = tv.getText().toString();
+                    tv_profession = (TextView) infoWindow.findViewById(R.id.tv_profession);
+                    tv_profession.setText(professionalInfo.getType().getType());
+
+                    tv_name_professional = (TextView) infoWindow.findViewById(R.id.tv_name_professional);
+                    tv_name_professional.setText(professionalInfo.getName());
+
+                    tv_cpf = (TextView) infoWindow.findViewById(R.id.tv_cpf);
+                    tv_cpf.setText(professionalInfo.getCpf());
+
+                    tv_phone_number = (TextView) infoWindow.findViewById(R.id.tv_phone_number);
+                    tv_phone_number.setText(professionalInfo.getPhone_number());
+
+                    btn_call = (Button) infoWindow.findViewById(R.id.btn_call);
+                    btn_call.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            TextView tv = (TextView) infoWindow.findViewById(R.id.tv_phone_number);
+                            Log.d("CLICK", "Clicou!");
+
+                            String number = tv.getText().toString();
 
 
-                                    Uri uri = Uri.parse("tel:" + number);
-                                    Intent intent = new Intent(Intent.ACTION_DIAL, uri);
-                                    startActivity(intent);
-                                }
-                            });
+                            Uri uri = Uri.parse("tel:" + number);
+                            Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+                            startActivity(intent);
                         }
-                        return infoWindow;
-                    }
-                });
+                    });
+                }
+                return infoWindow;
             }
         });
 
