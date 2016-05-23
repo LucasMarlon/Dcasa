@@ -1,5 +1,6 @@
 package projeto.emp.dcasa.views;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -26,15 +28,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import projeto.emp.dcasa.R;
 import projeto.emp.dcasa.models.PROFESSIONAL_TYPE;
 import projeto.emp.dcasa.models.Professional;
+import projeto.emp.dcasa.utils.MainMapFragment;
 
 public class MapsActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     public static final String TAG = MapsActivity.class.getSimpleName();
@@ -48,13 +52,21 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
     private Boolean plumber_pressed;
     private Boolean fitter_pressed;
     private Button btn_call;
+    private TextView tv_profession;
     private View infoWindow;
+
+    private MainMapFragment mapFragment;
+    private HashMap<Marker, Professional> professionalMarkerMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        setUpMapIfNeeded();
+
+        mapFragment = new MainMapFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.add(R.id.map, mapFragment);
+        ft.commit();
 
         electrician_pressed = true;
         plumber_pressed = true;
@@ -73,11 +85,6 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
         }
 
         professionals = criaProfissionais();
-
-//        final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-//        actionBar.setCustomView(R.layout.actionbar_custom_view);
-//        actionBar.setDisplayShowTitleEnabled(false);
-//        actionBar.setDisplayShowCustomEnabled(true);
 
         ib_electrician = (ImageButton) findViewById(R.id.ib_electrician);
         ib_electrician.setOnClickListener(new View.OnClickListener() {
@@ -184,42 +191,9 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
 
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
-        //mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude)).title("Current Location"));
-//        MarkerOptions options = new MarkerOptions()
-//                .position(latLng)
-//                .title("I am here!");
-//        mMap.addMarker(options);
-        mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude))
-                .title("Minha localização")
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.user_location_icon)));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
-    }
-
-    private void handleLocationsProfessionals(Professional professional) {
-        Log.d(TAG, professional.getLocation().toString());
-        LatLng latLng;
-        if (professional.getLocation().getLongitude() == 0d || professional.getLocation().getLatitude() == 0d) {
-            latLng = getLatLng(professional.getLocation().getProvider(), professional);
-        } else {
-           latLng = new LatLng(professional.getLocation().getLatitude(),professional.getLocation().getLongitude());
-        }
-
-        if (professional.getType().equals(PROFESSIONAL_TYPE.ELECTRICIAN)) {
-            mMap.addMarker(new MarkerOptions().position(latLng)
-                    .title(professional.getNome())
-                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.electrician_location_icon)));
-
-        } else if (professional.getType().equals(PROFESSIONAL_TYPE.PLUMBER)) {
-            mMap.addMarker(new MarkerOptions().position(latLng)
-                    .title(professional.getNome())
-                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.plumber_location_icon)));
-
-        } else if (professional.getType().equals(PROFESSIONAL_TYPE.FITTER)) {
-            mMap.addMarker(new MarkerOptions().position(latLng)
-                    .title(professional.getNome())
-                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.fitter_location_icon)));
-        }
+        mapFragment.placeMarker(latLng);
+        //mapFragment.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
+        mapFragment.getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
     }
 
     public LatLng getLatLng(String location, Professional professional){
@@ -230,8 +204,6 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
             Geocoder geocoder = new Geocoder(this);
             try {
                 addressList = geocoder.getFromLocationName(location , 1);
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -251,55 +223,7 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
     @Override
     protected void onResume() {
         super.onResume();
-        setUpMapIfNeeded();
     }
-
-    private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
-            // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                setUpMap();
-            }
-        }
-    }
-
-    private void setUpMap() {
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoWindow(Marker marker) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                if (!marker.getTitle().equals("Minha localização")) {
-                    infoWindow = getLayoutInflater().inflate(R.layout.infowindow_professional, null);
-                    btn_call = (Button) infoWindow.findViewById(R.id.btn_call);
-                    btn_call.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            TextView tv = (TextView)infoWindow.findViewById(R.id.tv_phone);
-                            Log.d("CLICK", "Clicou!");
-
-                            String number = tv.getText().toString();
-
-
-                            Uri uri = Uri.parse("tel:"+number);
-                            Intent intent = new Intent(Intent.ACTION_DIAL,uri);
-                            startActivity(intent);
-                        }
-                    });
-                }
-                return infoWindow;
-            }
-        });
-        mMap.setMyLocationEnabled(false); //se colocar false, sai o ponto azul e o botão para dar zoom
-    }
-
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -307,17 +231,19 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     private void loadLocationsOnMap() {
-        mMap.clear();
+        mapFragment.getMap().clear();
         if (mLastLocation == null) {
             mLastLocation =  LocationServices.FusedLocationApi.getLastLocation (
                     mGoogleApiClient );
         }
 
         if  ( mLastLocation !=  null )  {
-            for (Professional p : professionalsSelected) {
-                handleLocationsProfessionals(p);
-            }
+//            for (Professional p : professionalsSelected) {
+//                handleLocationsProfessionals(p);
+//            }
+            setUpProfessionalsMarker();
             handleNewLocation(mLastLocation);
+
         } else {
             Log.i("MY LOCATION", "NULL");
         }
@@ -339,4 +265,65 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) { }
+
+    private void setUpProfessionalsMarker() {
+
+        professionalMarkerMap = new HashMap<Marker, Professional>();
+        Marker marker;
+        LatLng latLng;
+        for (Professional prof: professionalsSelected) {
+            if (prof.getLocation().getLongitude() == 0d || prof.getLocation().getLatitude() == 0d) {
+                latLng = getLatLng(prof.getLocation().getProvider(), prof);
+            } else {
+                latLng = new LatLng(prof.getLocation().getLatitude(),prof.getLocation().getLongitude());
+            }
+            marker = mapFragment.placeMarker(prof, latLng);
+            professionalMarkerMap.put(marker, prof);
+        }
+
+
+        //add the onClickInfoWindowListener
+        mapFragment.getMap().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+
+            public void onInfoWindowClick(Marker marker) {
+                final Professional professionalInfo = professionalMarkerMap.get(marker);
+//                Toast.makeText(getBaseContext(),
+//                        "Nome do professional " + professionalInfo.getNome() + " , " + professionalInfo.getPhone_number(),
+//                        Toast.LENGTH_LONG).show();
+                mapFragment.getMap().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                    @Override
+                    public View getInfoWindow(Marker marker) {
+                        return null;
+                    }
+
+                    @Override
+                    public View getInfoContents(Marker marker) {
+                        if (!marker.getTitle().equals("Minha localização")) {
+                            infoWindow = getLayoutInflater().inflate(R.layout.infowindow_professional, null);
+                            tv_profession = (TextView) infoWindow.findViewById(R.id.tv_profession);
+                            tv_profession.setText(professionalInfo.getType().getType());
+                            btn_call = (Button) infoWindow.findViewById(R.id.btn_call);
+                            btn_call.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    TextView tv = (TextView) infoWindow.findViewById(R.id.tv_phone);
+                                    Log.d("CLICK", "Clicou!");
+
+                                    String number = tv.getText().toString();
+
+
+                                    Uri uri = Uri.parse("tel:" + number);
+                                    Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                        return infoWindow;
+                    }
+                });
+            }
+        });
+
+    }
 }
