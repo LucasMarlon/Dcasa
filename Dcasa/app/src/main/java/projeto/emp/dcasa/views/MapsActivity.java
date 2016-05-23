@@ -215,19 +215,16 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
             Geocoder geocoder = new Geocoder(this);
             try {
                 addressList = geocoder.getFromLocationName(location , 1);
+                Address address = addressList.get(0);
+                professional.getLocation().setLatitude(address.getLatitude());
+                professional.getLocation().setLatitude(address.getLongitude());
+                LatLng latLng = new LatLng(address.getLatitude() , address.getLongitude());
+                return latLng;
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            Address address = addressList.get(0);
-            professional.getLocation().setLatitude(address.getLatitude());
-            professional.getLocation().setLatitude(address.getLongitude());
-            LatLng latLng = new LatLng(address.getLatitude() , address.getLongitude());
-
-            return latLng;
-
         }
-        return new LatLng(0, 0);
+        return null;
     }
 
 
@@ -262,7 +259,9 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     @Override
-    public void onConnectionSuspended(int i) { }
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
 
     protected  void onStart() {
         mGoogleApiClient.connect();
@@ -275,7 +274,12 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) { }
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = "
+                + connectionResult.getErrorCode());
+
+    }
+
 
     private void setUpProfessionalsMarker() {
 
