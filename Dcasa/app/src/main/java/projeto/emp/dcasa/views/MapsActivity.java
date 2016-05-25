@@ -168,6 +168,8 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
         elec.setName("José Luiz");
         elec.setType(PROFESSIONAL_TYPE.ELECTRICIAN);
         elec.setLocation(new Location("Rua Rodrigues Alves Campina Grande"));
+        elec.getLocation().setLatitude(-7.21966);
+        elec.getLocation().setLongitude(-35.89938);
         elec.setCpf("486.136.632-14");
         elec.setPhone_number("(83)98645-4545");
         elec.addEvaluation(user, 3);
@@ -177,6 +179,8 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
         plum.setName("João Melo");
         plum.setType(PROFESSIONAL_TYPE.PLUMBER);
         plum.setLocation(new Location("Avenida Juvênio Arruda Campina Grande"));
+        plum.getLocation().setLatitude(-7.21078);
+        plum.getLocation().setLongitude(-35.91883);
         plum.setCpf("576.373.113-17");
         plum.setPhone_number("(83)98645-8888");
         plum.addEvaluation(user, 4);
@@ -186,6 +190,8 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
         fitter.setName("Severino Miguel");
         fitter.setType(PROFESSIONAL_TYPE.FITTER);
         fitter.setLocation(new Location("Avenida Dr. Francisco Pinto Campina Grande"));
+        fitter.getLocation().setLatitude(-7.20681);
+        fitter.getLocation().setLongitude(-35.90913);
         fitter.setCpf("051.276.452-20");
         fitter.setPhone_number("(83)98645-8080");
         fitter.addEvaluation(user, 5);
@@ -205,26 +211,6 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
         mapFragment.placeMarker(latLng);
         //mapFragment.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
         mapFragment.getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
-    }
-
-    public LatLng getLatLng(String location, Professional professional){
-
-        List<Address> addressList = null;
-        if(location != null || !location.equals(""))
-        {
-            Geocoder geocoder = new Geocoder(this);
-            try {
-                addressList = geocoder.getFromLocationName(location , 1);
-                Address address = addressList.get(0);
-                professional.getLocation().setLatitude(address.getLatitude());
-                professional.getLocation().setLatitude(address.getLongitude());
-                LatLng latLng = new LatLng(address.getLatitude() , address.getLongitude());
-                return latLng;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
     }
 
 
@@ -287,11 +273,7 @@ public class MapsActivity extends ActionBarActivity implements GoogleApiClient.C
         Marker marker;
         LatLng latLng;
         for (Professional prof: professionalsSelected) {
-            if (prof.getLocation().getLongitude() == 0d || prof.getLocation().getLatitude() == 0d) {
-                latLng = getLatLng(prof.getLocation().getProvider(), prof);
-            } else {
-                latLng = new LatLng(prof.getLocation().getLatitude(),prof.getLocation().getLongitude());
-            }
+            latLng = new LatLng(prof.getLocation().getLatitude(),prof.getLocation().getLongitude());
             marker = mapFragment.placeMarker(prof, latLng);
             professionalMarkerMap.put(marker, prof);
         }
