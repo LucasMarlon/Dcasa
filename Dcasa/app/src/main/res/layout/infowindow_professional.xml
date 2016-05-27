@@ -24,12 +24,12 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="30dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="65">
 
             <TextView
-                android:text="TESTE"
+                android:text="Profession"
                 android:id="@+id/tv_profession"
                 android:textStyle="bold"
                 android:textColor="@color/colorBlue"
@@ -40,7 +40,7 @@
                 android:layout_marginBottom="10dp"/>
 
             <TextView
-                android:text="TESTE"
+                android:text="Name"
                 android:textColor="@color/grey"
                 android:textStyle="bold"
                 android:id="@+id/tv_name_professional"
@@ -51,17 +51,8 @@
                 android:layout_marginBottom="10dp"/>
 
             <TextView
-                android:text="TESTE"
+                android:text="CPF"
                 android:id="@+id/tv_cpf"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey"
-                android:textSize="15dp"
-                android:layout_width="match_parent"
-                android:gravity="left"
-                android:layout_marginBottom="10dp"/>
-
-            <TextView
-                android:id="@+id/tv_phone_number"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey"
                 android:textSize="15dp"

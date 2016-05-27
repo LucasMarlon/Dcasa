@@ -40,7 +40,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
-    public static final String TAG = MapsActivity.class.getSimpleName();
+    public static final String TAG = MainActivity.class.getSimpleName();
     private List<Professional> professionals;
     private List<Professional> professionalsSelected;
     private List<PROFESSIONAL_TYPE> typesList;
@@ -53,7 +53,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     private TextView tv_profession;
     private TextView tv_name_professional;
     private TextView tv_cpf;
-    private TextView tv_phone_number;
     private HashMap<Marker, Professional> professionalMarkerMap;
 
     private ViewGroup infoWindow;
@@ -221,10 +220,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                     tv_cpf = (TextView) infoWindow.findViewById(R.id.tv_cpf);
                     tv_cpf.setText(professionalInfo.getCpf());
 
-                    tv_phone_number = (TextView) infoWindow.findViewById(R.id.tv_phone_number);
-                    tv_phone_number.setText(professionalInfo.getPhone_number());
-
-
                     RatingBar rate_bar = (RatingBar) infoWindow.findViewById(R.id.evaluataion_bar);
 
                     rate_bar.setRating(professionalInfo.getAverageEvaluations());
@@ -237,9 +232,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                     {
                         @Override
                         protected void onClickConfirmed(View v, Marker marker) {
-                            TextView tv = (TextView) infoWindow.findViewById(R.id.tv_phone_number);
-                            String number = tv.getText().toString();
-                            Uri uri = Uri.parse("tel:" + number);
+
+                            Uri uri = Uri.parse("tel:" + professionalInfo.getPhone_number());
                             Intent intent = new Intent(Intent.ACTION_DIAL, uri);
                             startActivity(intent);
                         }

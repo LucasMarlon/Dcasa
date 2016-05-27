@@ -29,7 +29,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name="projeto.emp.dcasa.views.SplashActivity"
+            android:name=".views.SplashActivity"
             android:label="@string/title_activity_app">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,14 +37,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--<activity-->
-            <!--android:name="projeto.emp.dcasa.views.MapsActivity"-->
-            <!--android:label="@string/title_activity_app">-->
-        <!--</activity>-->
         <activity
-            android:name="projeto.emp.dcasa.views.MainActivity"
-            android:label="@string/title_activity_app">
-        </activity>
+            android:name=".views.MainActivity"
+            android:label="@string/title_activity_app"></activity>
     </application>
 
 </manifest>
