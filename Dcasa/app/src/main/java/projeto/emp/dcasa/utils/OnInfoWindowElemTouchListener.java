@@ -1,7 +1,5 @@
 package projeto.emp.dcasa.utils;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,12 +12,10 @@ public abstract class OnInfoWindowElemTouchListener implements OnTouchListener {
     private final Handler handler = new Handler();
 
     private Marker marker;
-    private String phone_number;
     private boolean pressed = false;
 
-    public OnInfoWindowElemTouchListener(View view, String phone_number) {
+    public OnInfoWindowElemTouchListener(View view) {
         this.view = view;
-        this.phone_number = phone_number;
     }
 
     public void setMarker(Marker marker) {

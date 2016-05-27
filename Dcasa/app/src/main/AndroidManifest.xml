@@ -37,8 +37,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--<activity-->
+            <!--android:name="projeto.emp.dcasa.views.MapsActivity"-->
+            <!--android:label="@string/title_activity_app">-->
+        <!--</activity>-->
         <activity
-            android:name="projeto.emp.dcasa.views.MapsActivity"
+            android:name="projeto.emp.dcasa.views.MainActivity"
             android:label="@string/title_activity_app">
         </activity>
     </application>
