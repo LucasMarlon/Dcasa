@@ -306,8 +306,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     private List<Professional> createProfessionals() {
         List<Professional> professionals = new ArrayList<Professional>();
         User user = new User(new Location("Rua das Uburanas, Campina Grande"),"Maria");
+
         Professional elec = new Professional();
-        
         elec.setName("José Luiz");
         elec.setType(PROFESSIONAL_TYPE.ELECTRICIAN);
         elec.setLocation(new Location("Rua Rodrigues Alves Campina Grande"));
@@ -316,6 +316,17 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         elec.setCpf("486.136.632-14");
         elec.setPhone_number("(83)98645-4545");
         elec.addEvaluation(user, 3);
+        professionals.add(elec);
+
+        elec = new Professional();
+        elec.setName("Francisco Couto Lima");
+        elec.setType(PROFESSIONAL_TYPE.ELECTRICIAN);
+        elec.setLocation(new Location("Rua Florípes Coutinho Campina Grande"));
+        elec.getLocation().setLatitude(-7.22192);
+        elec.getLocation().setLongitude(-35.92162);
+        elec.setCpf("853.218.642-41");
+        elec.setPhone_number("(83)9989-6459");
+        elec.addEvaluation(user, 4);
         professionals.add(elec);
 
         Professional plum = new Professional();
@@ -329,6 +340,18 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         plum.addEvaluation(user, 4);
         professionals.add(plum);
 
+        plum = new Professional();
+        plum.setName("Mário Veloso Santos");
+        plum.setType(PROFESSIONAL_TYPE.PLUMBER);
+        plum.setLocation(new Location("Rua Damasco Campina Grande"));
+        plum.getLocation().setLatitude(-7.23531);
+        plum.getLocation().setLongitude(-35.90284);
+        plum.setCpf("656.124.141-02");
+        plum.setPhone_number("(83)9985-8568");
+        plum.addEvaluation(user, 3);
+        professionals.add(plum);
+
+
         Professional fitter = new Professional();
         fitter.setName("Severino Miguel");
         fitter.setType(PROFESSIONAL_TYPE.FITTER);
@@ -338,6 +361,17 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         fitter.setCpf("051.276.452-20");
         fitter.setPhone_number("(83)98645-8080");
         fitter.addEvaluation(user, 5);
+        professionals.add(fitter);
+
+        fitter = new Professional();
+        fitter.setName("Carlos Henrique");
+        fitter.setType(PROFESSIONAL_TYPE.FITTER);
+        fitter.setLocation(new Location("Rua José Lins do Rego Campina Grande"));
+        fitter.getLocation().setLatitude(-7.21170);
+        fitter.getLocation().setLongitude(-35.89309);
+        fitter.setCpf("173.620.525-02");
+        fitter.setPhone_number("(83)98888-4310");
+        fitter.addEvaluation(user, 2);
         professionals.add(fitter);
 
         return professionals;
