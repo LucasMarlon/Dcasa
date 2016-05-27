@@ -7,6 +7,80 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background_login"
     tools:context="projeto.emp.dcasa.views.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@id/layout_decasa"
+        android:paddingTop="150dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/ic_launcher" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@id/layout_slogan"
+        android:orientation="horizontal"
+        android:layout_below="@+id/layout_decasa"
+        android:paddingTop="70dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/ic_launcher" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_below="@+id/layout_slogan"
+        android:paddingTop="70dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:textAlignment="center"
+            android:text="@string/btn_register"
+            android:textAllCaps="true"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:background="@drawable/screen_border_login"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="20dp"/>
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:textAlignment="center"
+            android:text="@string/btn_login"
+            android:gravity="center"
+            android:textAllCaps="true"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:background="@drawable/screen_border_login"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="25dp"/>
+
+
+
+    </LinearLayout>
+
 
 </RelativeLayout>

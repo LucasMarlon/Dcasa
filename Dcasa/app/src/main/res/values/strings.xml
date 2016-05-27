@@ -4,4 +4,7 @@
     <string name="call">LIGAR</string>
     <string name="drawer_open">Abre drawer</string>
     <string name="drawer_close">Fecha drawer</string>
+    <string name="btn_register">Cadastro</string>
+    <string name="btn_login">Login</string>
+
 </resources>
