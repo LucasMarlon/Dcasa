@@ -12,19 +12,16 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +29,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,19 +50,16 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     private Boolean electrician_pressed;
     private Boolean plumber_pressed;
     private Boolean fitter_pressed;
-    private Button btn_call;
     private TextView tv_profession;
     private TextView tv_name_professional;
     private TextView tv_cpf;
     private TextView tv_phone_number;
     private HashMap<Marker, Professional> professionalMarkerMap;
 
-    private View infoWindow;
-    private TextView infoTitle;
-    private TextView infoSnippet;
-    private Button infoButton;
-    private OnInfoWindowElemTouchListener infoButtonListener;
-    private MapFragment mapFragment;
+    private ViewGroup infoWindow;
+    private Button btn_call;
+    private OnInfoWindowElemTouchListener btn_call_listener;
+    private MainMapFragment mapFragment;
     private MapWrapperLayout mapWrapperLayout;
 
 
@@ -74,10 +67,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
-//        final MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
-//        final MapWrapperLayout mapWrapperLayout = (MapWrapperLayout)findViewById(R.id.map_relative_layout);
-//        final GoogleMap map = mapFragment.getMap();
 
         mapFragment = new MainMapFragment();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -102,8 +91,169 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                     . build ();
         }
 
-        professionals = criaProfissionais();
+        professionals = createProfessionals();
 
+        selectProfessionals();
+    }
+    public static int getPixelsFromDp(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int)(dp * scale + 0.5f);
+    }
+
+    private void loadProfessionalsSelected() {
+        professionalsSelected = new ArrayList<Professional>();
+        for (PROFESSIONAL_TYPE type : typesList) {
+            for (Professional professional: professionals) {
+                if(professional.getType().equals(type)) {
+                    professionalsSelected.add(professional);
+                }
+            }
+        }
+        loadLocationsOnMap();
+    }
+
+
+    private void addTypeToSelecteds(PROFESSIONAL_TYPE type) {
+        typesList.add(type);
+        loadProfessionalsSelected();
+    }
+
+    private void deleteTypeFromSelecteds(PROFESSIONAL_TYPE type) {
+        typesList.remove(type);
+        loadProfessionalsSelected();
+    }
+
+    private void handleNewLocation(Location location) {
+        double currentLatitude = location.getLatitude();
+        double currentLongitude = location.getLongitude();
+
+        LatLng latLng = new LatLng(currentLatitude, currentLongitude);
+
+        mapFragment.placeMarker(latLng);
+        mapFragment.getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        loadProfessionalsSelected();
+    }
+
+    private void loadLocationsOnMap() {
+        mapFragment.getMap().clear();
+        if (mLastLocation == null) {
+            mLastLocation =  LocationServices.FusedLocationApi.getLastLocation (
+                    mGoogleApiClient );
+        }
+
+        if  ( mLastLocation !=  null )  {
+            setUpProfessionalsMarker();
+            handleNewLocation(mLastLocation);
+
+        } else {
+            Log.i("MY LOCATION", "NULL");
+        }
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
+
+    protected  void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    protected  void onStop ()  {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = "
+                + connectionResult.getErrorCode());
+
+    }
+
+
+    private void setUpProfessionalsMarker() {
+
+        professionalMarkerMap = new HashMap<Marker, Professional>();
+        Marker marker;
+        LatLng latLng;
+        for (Professional prof: professionalsSelected) {
+            latLng = new LatLng(prof.getLocation().getLatitude(),prof.getLocation().getLongitude());
+            marker = mapFragment.placeMarker(prof, latLng);
+            professionalMarkerMap.put(marker, prof);
+        }
+
+        mapFragment.getMap().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                final Professional professionalInfo = professionalMarkerMap.get(marker);
+
+                mapWrapperLayout.init(mapFragment.getMap(), getPixelsFromDp(MainActivity.this, 39 + 20));
+
+                infoWindow = null;
+
+                if (!marker.getTitle().equals("Minha localização")) {
+                    infoWindow = (ViewGroup) getLayoutInflater().inflate(R.layout.infowindow_professional, null);
+
+                    tv_profession = (TextView) infoWindow.findViewById(R.id.tv_profession);
+                    tv_profession.setText(professionalInfo.getType().getType());
+
+                    tv_name_professional = (TextView) infoWindow.findViewById(R.id.tv_name_professional);
+                    tv_name_professional.setText(professionalInfo.getName());
+
+                    tv_cpf = (TextView) infoWindow.findViewById(R.id.tv_cpf);
+                    tv_cpf.setText(professionalInfo.getCpf());
+
+                    tv_phone_number = (TextView) infoWindow.findViewById(R.id.tv_phone_number);
+                    tv_phone_number.setText(professionalInfo.getPhone_number());
+
+
+                    RatingBar rate_bar = (RatingBar) infoWindow.findViewById(R.id.evaluataion_bar);
+
+                    rate_bar.setRating(professionalInfo.getAverageEvaluations());
+
+                    btn_call = (Button) infoWindow.findViewById(R.id.btn_call);
+
+                    // Setting custom OnTouchListener which deals with the pressed state
+                    // so it shows up
+                    btn_call_listener = new OnInfoWindowElemTouchListener(btn_call)
+                    {
+                        @Override
+                        protected void onClickConfirmed(View v, Marker marker) {
+                            TextView tv = (TextView) infoWindow.findViewById(R.id.tv_phone_number);
+                            String number = tv.getText().toString();
+                            Uri uri = Uri.parse("tel:" + number);
+                            Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+                            startActivity(intent);
+                        }
+                    };
+                    btn_call.setOnTouchListener(btn_call_listener);
+                }
+                mapWrapperLayout.setMarkerWithInfoWindow(marker, infoWindow);
+                return infoWindow;
+            }
+        });
+
+    }
+
+    private void selectProfessionals() {
         ib_electrician = (ImageButton) findViewById(R.id.ib_electrician);
         ib_electrician.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,37 +301,13 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 }
             }
         });
-
     }
 
-    private void loadProfessionalsSelected() {
-        professionalsSelected = new ArrayList<Professional>();
-        for (PROFESSIONAL_TYPE type : typesList) {
-            for (Professional professional: professionals) {
-                if(professional.getType().equals(type)) {
-                    professionalsSelected.add(professional);
-                }
-            }
-        }
-        loadLocationsOnMap();
-    }
-
-
-    private void addTypeToSelecteds(PROFESSIONAL_TYPE type) {
-        typesList.add(type);
-        loadProfessionalsSelected();
-    }
-
-    private void deleteTypeFromSelecteds(PROFESSIONAL_TYPE type) {
-        typesList.remove(type);
-        loadProfessionalsSelected();
-    }
-
-
-    private List<Professional> criaProfissionais() {
+    private List<Professional> createProfessionals() {
         List<Professional> professionals = new ArrayList<Professional>();
         User user = new User(new Location("Rua das Uburanas, Campina Grande"),"Maria");
         Professional elec = new Professional();
+        
         elec.setName("José Luiz");
         elec.setType(PROFESSIONAL_TYPE.ELECTRICIAN);
         elec.setLocation(new Location("Rua Rodrigues Alves Campina Grande"));
@@ -215,135 +341,6 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         professionals.add(fitter);
 
         return professionals;
-    }
-
-    private void handleNewLocation(Location location) {
-        double currentLatitude = location.getLatitude();
-        double currentLongitude = location.getLongitude();
-
-        LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-
-        ((MainMapFragment) mapFragment).placeMarker(latLng);
-        //mapFragment.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
-        mapFragment.getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        loadProfessionalsSelected();
-    }
-
-    private void loadLocationsOnMap() {
-        mapFragment.getMap().clear();
-        if (mLastLocation == null) {
-            mLastLocation =  LocationServices.FusedLocationApi.getLastLocation (
-                    mGoogleApiClient );
-        }
-
-        if  ( mLastLocation !=  null )  {
-//            for (Professional p : professionalsSelected) {
-//                handleLocationsProfessionals(p);
-//            }
-            setUpProfessionalsMarker();
-            handleNewLocation(mLastLocation);
-
-        } else {
-            Log.i("MY LOCATION", "NULL");
-        }
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        mGoogleApiClient.connect();
-    }
-
-    protected  void onStart() {
-        mGoogleApiClient.connect();
-        super.onStart();
-    }
-
-    protected  void onStop ()  {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = "
-                + connectionResult.getErrorCode());
-
-    }
-
-
-    private void setUpProfessionalsMarker() {
-
-        professionalMarkerMap = new HashMap<Marker, Professional>();
-        Marker marker;
-        LatLng latLng;
-        for (Professional prof: professionalsSelected) {
-            latLng = new LatLng(prof.getLocation().getLatitude(),prof.getLocation().getLongitude());
-            marker = ((MainMapFragment) mapFragment).placeMarker(prof, latLng);
-            professionalMarkerMap.put(marker, prof);
-        }
-
-        mapFragment.getMap().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoWindow(Marker marker) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                final Professional professionalInfo = professionalMarkerMap.get(marker);
-                infoWindow = null;
-
-                if (!marker.getTitle().equals("Minha localização")) {
-                    infoWindow = getLayoutInflater().inflate(R.layout.infowindow_professional, null);
-
-                    tv_profession = (TextView) infoWindow.findViewById(R.id.tv_profession);
-                    tv_profession.setText(professionalInfo.getType().getType());
-
-                    tv_name_professional = (TextView) infoWindow.findViewById(R.id.tv_name_professional);
-                    tv_name_professional.setText(professionalInfo.getName());
-
-                    tv_cpf = (TextView) infoWindow.findViewById(R.id.tv_cpf);
-                    tv_cpf.setText(professionalInfo.getCpf());
-
-                    tv_phone_number = (TextView) infoWindow.findViewById(R.id.tv_phone_number);
-                    tv_phone_number.setText(professionalInfo.getPhone_number());
-
-
-                    RatingBar rate_bar = (RatingBar) infoWindow.findViewById(R.id.evaluataion_bar);
-
-                    rate_bar.setRating(professionalInfo.getAverageEvaluations());
-                    Log.d("Rating", professionalInfo.getAverageEvaluations()+"");
-
-                    infoButton = (Button)infoWindow.findViewById(R.id.btn_call);
-
-                    // Setting custom OnTouchListener which deals with the pressed state
-                    // so it shows up
-                    infoButtonListener = new OnInfoWindowElemTouchListener(infoButton)
-                    {
-                        @Override
-                        protected void onClickConfirmed(View v, Marker marker) {
-                            // Here we can perform some action triggered after clicking the button
-                            Toast.makeText(MainActivity.this, marker.getTitle() + "'s button clicked!", Toast.LENGTH_SHORT).show();
-                        }
-                    };
-                    infoButton.setOnTouchListener(infoButtonListener);
-                }
-                mapWrapperLayout.setMarkerWithInfoWindow(marker, infoWindow);
-                return infoWindow;
-            }
-        });
-
     }
 
 }
