@@ -23,9 +23,9 @@ public class MySharedPreferences {
     private static final String IS_USER_LOGIN = "IsUserLoggedIn";
     public static final String KEY_NAME_USER = "name_user";
     public static final String KEY_lAST_NAME_USER = "last_name_user";
+    public static final String KEY_PHONE_USER = "phone_user";
     public static final String KEY_LOGIN_USER = "login";
     public static final String KEY_PASSWORD_USER = "password_user";
-    public static final String KEY_PHOTO_USER = "photo_user";
 
     public MySharedPreferences(Context context){
         this.mContext = context;
@@ -37,9 +37,9 @@ public class MySharedPreferences {
         mEditor.putBoolean(IS_USER_LOGIN, true);
         mEditor.putString(KEY_NAME_USER, user.getName());
         mEditor.putString(KEY_lAST_NAME_USER, user.getLastName());
+        mEditor.putString(KEY_PHONE_USER, user.getPhone());
         mEditor.putString(KEY_LOGIN_USER, user.getLogin());
         mEditor.putString(KEY_PASSWORD_USER, user.getPassword());
-        mEditor.putString(KEY_PHOTO_USER, Base64.encodeToString(user.getPhoto(), Base64.DEFAULT));
         mEditor.commit();
     }
 
@@ -47,9 +47,9 @@ public class MySharedPreferences {
         HashMap<String, String> userDetails = new HashMap<String, String>();
         userDetails.put(KEY_NAME_USER, mPref.getString(KEY_NAME_USER, null));
         userDetails.put(KEY_lAST_NAME_USER, mPref.getString(KEY_lAST_NAME_USER, null));
+        userDetails.put(KEY_PHONE_USER, mPref.getString(KEY_PHONE_USER, null));
         userDetails.put(KEY_LOGIN_USER, mPref.getString(KEY_LOGIN_USER, null));
         userDetails.put(KEY_PASSWORD_USER, mPref.getString(KEY_PASSWORD_USER, null));
-        userDetails.put(KEY_PHOTO_USER, mPref.getString(KEY_PHOTO_USER, null));
 
         return userDetails;
     }

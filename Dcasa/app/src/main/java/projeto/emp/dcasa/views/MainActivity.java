@@ -5,6 +5,7 @@ import projeto.emp.dcasa.models.Professional;
 import projeto.emp.dcasa.models.User;
 import projeto.emp.dcasa.utils.MainMapFragment;
 import projeto.emp.dcasa.utils.MapWrapperLayout;
+import projeto.emp.dcasa.utils.MySharedPreferences;
 import projeto.emp.dcasa.utils.OnInfoWindowElemTouchListener;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -15,13 +16,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import android.Manifest;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +64,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     private OnInfoWindowElemTouchListener btn_call_listener;
     private MainMapFragment mapFragment;
     private MapWrapperLayout mapWrapperLayout;
+    private MySharedPreferences userLogged;
 
 
     @Override
@@ -67,12 +72,14 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        userLogged = new MySharedPreferences(getApplicationContext());
+
         mapFragment = new MainMapFragment();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.add(R.id.map, mapFragment);
         ft.commit();
 
-        mapWrapperLayout = (MapWrapperLayout)findViewById(R.id.map_relative_layout);
+        mapWrapperLayout = (MapWrapperLayout) findViewById(R.id.map_relative_layout);
 
         electrician_pressed = true;
         plumber_pressed = true;
@@ -82,28 +89,29 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         typesList.add(PROFESSIONAL_TYPE.FITTER);
         typesList.add(PROFESSIONAL_TYPE.PLUMBER);
 
-        if  ( mGoogleApiClient ==  null )  {
-            mGoogleApiClient =  new  GoogleApiClient. Builder ( this )
-                    . addConnectionCallbacks ( this )
-                    . addOnConnectionFailedListener ( this )
-                    . addApi ( LocationServices. API )
-                    . build ();
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
         }
 
         professionals = createProfessionals();
 
         selectProfessionals();
     }
+
     public static int getPixelsFromDp(Context context, float dp) {
         final float scale = context.getResources().getDisplayMetrics().density;
-        return (int)(dp * scale + 0.5f);
+        return (int) (dp * scale + 0.5f);
     }
 
     private void loadProfessionalsSelected() {
         professionalsSelected = new ArrayList<Professional>();
         for (PROFESSIONAL_TYPE type : typesList) {
-            for (Professional professional: professionals) {
-                if(professional.getType().equals(type)) {
+            for (Professional professional : professionals) {
+                if (professional.getType().equals(type)) {
                     professionalsSelected.add(professional);
                 }
             }
@@ -130,6 +138,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
         mapFragment.placeMarker(latLng);
         mapFragment.getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0f));
+
     }
 
 
@@ -146,8 +155,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     private void loadLocationsOnMap() {
         mapFragment.getMap().clear();
         if (mLastLocation == null) {
-            mLastLocation =  LocationServices.FusedLocationApi.getLastLocation (
-                    mGoogleApiClient );
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                    mGoogleApiClient);
         }
 
         if  ( mLastLocation !=  null )  {
@@ -233,9 +242,13 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                         @Override
                         protected void onClickConfirmed(View v, Marker marker) {
 
-                            Uri uri = Uri.parse("tel:" + professionalInfo.getPhone_number());
-                            Intent intent = new Intent(Intent.ACTION_DIAL, uri);
-                            startActivity(intent);
+                            if (userLogged.isUserLoggedIn()) {
+                                Uri uri = Uri.parse("tel:" + professionalInfo.getPhone_number());
+                                Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+                                startActivity(intent);
+                            } else {
+                                setView(MainActivity.this, CadastreOrLoginActivity.class);
+                            }
                         }
                     };
                     btn_call.setOnTouchListener(btn_call_listener);
@@ -245,6 +258,11 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
             }
         });
 
+    }
+    public void setView(Context context, Class classe){
+        Intent it = new Intent();
+        it.setClass(context, classe);
+        startActivity(it);
     }
 
     private void selectProfessionals() {
@@ -299,7 +317,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     private List<Professional> createProfessionals() {
         List<Professional> professionals = new ArrayList<Professional>();
-        User user = new User(new Location("Rua das Uburanas, Campina Grande"),"Maria");
+        User user = new User("Maria");
 
         Professional elec = new Professional();
         elec.setName("José Luiz");
@@ -313,7 +331,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         professionals.add(elec);
 
         elec = new Professional();
-        elec.setName("Francisco Couto Lima");
+        elec.setName("Francisco Couto");
         elec.setType(PROFESSIONAL_TYPE.ELECTRICIAN);
         elec.setLocation(new Location("Rua Florípes Coutinho Campina Grande"));
         elec.getLocation().setLatitude(-7.22192);

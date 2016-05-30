@@ -24,15 +24,14 @@
         <item name="colorPrimary">@android:color/white</item>
     </style>
 
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>
 
     <!--<resources>-->
 
-    <!--&lt;!&ndash; Base application theme. &ndash;&gt;-->
-    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
-        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
-        <!--&lt;!&ndash; colorPrimary is used for the default action bar background &ndash;&gt;-->
-        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
-    <!--</style>-->
+    <!--&lt;!&ndash; Base application theme. &ndash;&gt;--><!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">--><!--&lt;!&ndash; Customize your theme here. &ndash;&gt;--><!--&lt;!&ndash; colorPrimary is used for the default action bar background &ndash;&gt;--><!--<item name="colorPrimary">@color/colorPrimary</item>--><!--</style>-->
 
-<!--</resources>-->
+    <!--</resources>-->

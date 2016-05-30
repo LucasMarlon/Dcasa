@@ -5,33 +5,22 @@ import android.location.Location;
 
 public class User {
 
-    private Location location;
     private String name;
     private String lastName;
+    private String phone;
     private String login;
     private String password;
-    private byte[] photo;
 
-    public User(Location location, String name) {
-        this.location = location;
+    public User(String name) {
         this.name = name;
     }
 
-    public User(Location location, String name, String lastName, String login, String password, byte[] photo) {
-        this.location = location;
+    public User(String name, String lastName, String phone, String login, String password) {
         this.name = name;
         this.lastName = lastName;
+        this.phone = phone;
         this.login = login;
         this.password = password;
-        this.photo = photo;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
     }
 
     public String getName() {
@@ -40,6 +29,14 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getPassword() {
@@ -65,12 +62,4 @@ public class User {
     public void setLogin(String login) {
         this.login = login;
     }
-
-    public byte[] getPhoto() {
-        return photo;
     }
-
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
-    }
-}
