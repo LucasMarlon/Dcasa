@@ -84,7 +84,7 @@
 
                     <RelativeLayout
                         android:layout_width="300dp"
-                        android:layout_height="100dp"
+                        android:layout_height="150dp"
                         android:layout_marginLeft="45dp"
                         android:layout_marginRight="45dp"
                         android:id="@+id/relative"
@@ -95,6 +95,7 @@
                             android:id="@+id/input_layout_email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:paddingTop="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp">
 
@@ -104,7 +105,6 @@
                                 android:layout_height="wrap_content"
                                 android:singleLine="true"
                                 android:maxLength="50"
-                                android:textColor="@color/grey"
                                 android:hint="Email" />
                         </android.support.design.widget.TextInputLayout>
 
@@ -112,6 +112,9 @@
                             android:id="@+id/input_layout_password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:paddingTop="10dp"
                             android:layout_below="@+id/input_layout_email">
 
                             <EditText
@@ -119,8 +122,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:inputType="textPassword"
+                                android:singleLine="true"
                                 android:maxLength="15"
-                                android:textColor="@color/grey"
                                 android:hint="Senha"/>
                         </android.support.design.widget.TextInputLayout>
 

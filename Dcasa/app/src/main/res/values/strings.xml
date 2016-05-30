@@ -4,7 +4,9 @@
     <string name="call">LIGAR</string>
     <string name="drawer_open">Abre drawer</string>
     <string name="drawer_close">Fecha drawer</string>
-    <string name="btn_register">Cadastro</string>
+    <string name="btn_register">Cadastrar</string>
+    <string name="btn_evaluate">Avaliar</string>
+    <string name="title_evaluate_services">Avaliar Serviços</string>
     <string name="btn_login">Login</string>
     <string name="title_activity_user_cadastre">Cadastro</string>
     <string name="title_activity_login">LoginActivity</string>

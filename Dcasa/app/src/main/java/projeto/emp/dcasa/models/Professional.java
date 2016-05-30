@@ -2,11 +2,12 @@ package projeto.emp.dcasa.models;
 
 import android.location.Location;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Professional {
+public class Professional implements Serializable{
 
     private Location location;
     private String phone_number;

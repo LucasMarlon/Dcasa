@@ -45,10 +45,16 @@
             android:label="@string/title_activity_app" />
         <activity
             android:name=".views.UserCadastreActivity"
-            android:label="@string/title_activity_app" />
+            android:label="@string/title_activity_app"
+            android:theme="@style/AppThemeDefault"/>
         <activity
-            android:name=".views.LoginActivity"
-            android:label="@string/title_activity_app" />
+        android:name=".views.LoginActivity"
+        android:label="@string/title_activity_app"
+            android:theme="@style/AppThemeDefault"/>
+        <activity
+            android:name=".views.EvaluationActivity"
+            android:label="@string/title_activity_app">
+        </activity>
     </application>
 
 </manifest>

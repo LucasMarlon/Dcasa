@@ -1,5 +1,7 @@
 package projeto.emp.dcasa.views;
 
+import projeto.emp.dcasa.adapters.DrawerListAdapter;
+import projeto.emp.dcasa.models.NavItem;
 import projeto.emp.dcasa.models.PROFESSIONAL_TYPE;
 import projeto.emp.dcasa.models.Professional;
 import projeto.emp.dcasa.models.User;
@@ -16,22 +18,27 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
-import android.Manifest;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -64,7 +71,16 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     private OnInfoWindowElemTouchListener btn_call_listener;
     private MainMapFragment mapFragment;
     private MapWrapperLayout mapWrapperLayout;
-    private MySharedPreferences userLogged;
+    private MySharedPreferences preferences;
+
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private RelativeLayout mDrawerPane;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private ArrayList<NavItem> mNavItems;
+    private Context context;
+    private android.support.v7.app.ActionBar actionBar;
+    private CharSequence mTitle;
 
 
     @Override
@@ -72,7 +88,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        userLogged = new MySharedPreferences(getApplicationContext());
+        preferences = new MySharedPreferences(getApplicationContext());
 
         mapFragment = new MainMapFragment();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -100,6 +116,12 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         professionals = createProfessionals();
 
         selectProfessionals();
+
+        mNavItems = new ArrayList<>();
+        if (preferences.isUserLoggedIn()) {
+            setmDrawer(mNavItems);
+        }
+        context = this;
     }
 
     public static int getPixelsFromDp(Context context, float dp) {
@@ -242,7 +264,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                         @Override
                         protected void onClickConfirmed(View v, Marker marker) {
 
-                            if (userLogged.isUserLoggedIn()) {
+                            if (preferences.isUserLoggedIn()) {
+                                preferences.saveProfessionalSelected(professionalInfo);
                                 Uri uri = Uri.parse("tel:" + professionalInfo.getPhone_number());
                                 Intent intent = new Intent(Intent.ACTION_DIAL, uri);
                                 startActivity(intent);
@@ -387,6 +410,81 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         professionals.add(fitter);
 
         return professionals;
+    }
+
+    public void setmDrawer(ArrayList<NavItem> mNavItems) {
+        mNavItems.add(new NavItem("Avaliar Serviço", R.mipmap.light_blue_electrician_button));
+        mNavItems.add(new NavItem("Sair", R.mipmap.light_blue_electrician_button));
+
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        mDrawerPane = (RelativeLayout) findViewById(R.id.drawerPane);
+        mDrawerList = (ListView) findViewById(R.id.navList);
+        DrawerListAdapter adapter2 = new DrawerListAdapter(this, mNavItems);
+        mDrawerList.setAdapter(adapter2);
+
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if (position == 0) {
+                    if (preferences.isProfessionalSelected()) {
+                       setView(MainActivity.this, EvaluationActivity.class);
+                    } else {
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setMessage("Você precisa utilizar um serviço antes!")
+                                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        setView(MainActivity.this, MainActivity.class);
+                                    }
+                                })
+                                .create()
+                                .show();
+                    }
+                }
+                if (position == 1) {
+                   preferences.logoutUser();
+                    setView(MainActivity.this, LoginActivity.class);
+                }
+            }
+        });
+
+
+//    	actionBar =  getSupportActionBar();
+//    	actionBar.setDisplayHomeAsUpEnabled(false);
+//    	actionBar.setHomeAsUpIndicator(R.mipmap.fitter_location_icon);
+//    	actionBar.setHomeButtonEnabled(true);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        mTitle = getTitle().toString();
+        mDrawerToggle = new ActionBarDrawerToggle(
+                MainActivity.this,
+                mDrawerLayout,
+                R.mipmap.fitter_location_icon,
+                R.string.drawer_open,
+                R.string.drawer_close) {
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) return true;
+        return super.onOptionsItemSelected(item);
     }
 
 }

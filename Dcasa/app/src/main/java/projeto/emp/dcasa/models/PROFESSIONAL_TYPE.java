@@ -1,7 +1,9 @@
 package projeto.emp.dcasa.models;
 
 
-public enum PROFESSIONAL_TYPE {
+import java.io.Serializable;
+
+public enum PROFESSIONAL_TYPE implements Serializable {
 
     PLUMBER (1, "Encanador"),
     FITTER (2, "Montador"),

@@ -8,6 +8,7 @@ import android.util.Base64;
 
 import java.util.HashMap;
 
+import projeto.emp.dcasa.models.Professional;
 import projeto.emp.dcasa.models.User;
 import projeto.emp.dcasa.views.LoginActivity;
 import projeto.emp.dcasa.views.MainActivity;
@@ -26,6 +27,12 @@ public class MySharedPreferences {
     public static final String KEY_PHONE_USER = "phone_user";
     public static final String KEY_LOGIN_USER = "login";
     public static final String KEY_PASSWORD_USER = "password_user";
+
+    private static final String IS_PROFESSIONAL_SELECTED = "IsProfessionalSelected";
+    public static final String KEY_NAME_PROFESSIONAL = "name_professional";
+    public static final String KEY_TYPE_PROFESSIONAL = "typeProfessional";
+    public static final String KEY_NUM_EVALUATIONS = "number_evaluations";
+    public static final String KEY_PHONE_PROFESSIONAL = "phone_professional";
 
     public MySharedPreferences(Context context){
         this.mContext = context;
@@ -70,7 +77,6 @@ public class MySharedPreferences {
         return mPref.getBoolean(IS_USER_LOGIN, false);
     }
 
-
     public void logoutUser(){
         mEditor.clear();
         mEditor.commit();
@@ -78,5 +84,37 @@ public class MySharedPreferences {
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(i);
+    }
+
+    public void saveProfessionalSelected(Professional professional) {
+        mEditor.putBoolean(IS_PROFESSIONAL_SELECTED, true);
+        mEditor.putString(KEY_NAME_PROFESSIONAL, professional.getName());
+        mEditor.putString(KEY_PHONE_PROFESSIONAL, professional.getPhone_number());
+        mEditor.putString(KEY_TYPE_PROFESSIONAL, professional.getType().getType());
+        mEditor.putFloat(KEY_NUM_EVALUATIONS, professional.getAverageEvaluations());
+        mEditor.commit();
+    }
+
+    public boolean isProfessionalSelected(){
+        return mPref.getBoolean(IS_PROFESSIONAL_SELECTED, false);
+    }
+
+    public void deselectProfessional(){
+        mEditor.putBoolean(IS_PROFESSIONAL_SELECTED, true);
+        mEditor.putString(KEY_NAME_PROFESSIONAL, null);
+        mEditor.putString(KEY_lAST_NAME_USER, null);
+        mEditor.putString(KEY_TYPE_PROFESSIONAL, null);
+        mEditor.putFloat(KEY_NUM_EVALUATIONS, 0);
+        mEditor.commit();
+    }
+
+    public HashMap<String, String> getProfessionalDetails(){
+        HashMap<String, String> professionalDetails = new HashMap<String, String>();
+        professionalDetails.put(KEY_NAME_PROFESSIONAL, mPref.getString(KEY_NAME_PROFESSIONAL, null));
+        professionalDetails.put(KEY_PHONE_PROFESSIONAL, mPref.getString(KEY_PHONE_PROFESSIONAL, null));
+        professionalDetails.put(KEY_TYPE_PROFESSIONAL, mPref.getString(KEY_TYPE_PROFESSIONAL, null));
+        professionalDetails.put(KEY_NUM_EVALUATIONS, mPref.getString(KEY_NUM_EVALUATIONS, null));
+
+        return professionalDetails;
     }
 }

@@ -1,34 +1,272 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="projeto.emp.dcasa.views.EvaluationActivity">
+    tools:context="projeto.emp.dcasa.views.UserCadastreActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent"
+        android:backgroundTint="@color/grey"
+        android:background="@drawable/background_login">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout_up"
+            android:background="@color/colorPrimary">
 
-    </android.support.design.widget.AppBarLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/image_decasa"
+                android:id="@+id/image_decasa"
+                android:paddingTop="40dp"/>
 
-    <include layout="@layout/content_evaluation" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_buttons"
+                android:orientation="horizontal"
+                android:layout_below="@+id/image_decasa"
+                android:paddingLeft="30dp"
+                android:layout_marginTop="25dp"
+                android:paddingRight="12dp">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/title_evaluate_services"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:paddingBottom="10dp"
+                    android:textSize="25dp"/>
 
-</android.support.design.widget.CoordinatorLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/layout_buttons"
+                android:background="@color/grey"
+                android:gravity="center"
+                android:id="@+id/layout_cadastre">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/grey"
+                    android:paddingTop="30dp"
+                    android:gravity="center"
+                    android:id="@+id/linear">
+
+                    <RelativeLayout
+                        android:layout_width="300dp"
+                        android:layout_height="400dp"
+                        android:gravity="center"
+                        android:id="@+id/relative"
+                        android:background="@drawable/screen_border_cadastre_or_login">
+
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:id="@+id/layout_informations_professional"
+                            android:weightSum="100">
+
+                            <projeto.emp.dcasa.views.RoundedImageView
+                                android:id="@+id/iv_professional"
+                                android:layout_width="150dp"
+                                android:layout_height="100dp"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/perfil_professional_small"
+                                android:layout_weight="35"/>
+
+                            <LinearLayout
+                                android:layout_height="match_parent"
+                                android:layout_width="match_parent"
+                                android:orientation="vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="65">
+
+                                <TextView
+                                    android:text="Profession"
+                                    android:id="@+id/tv_profession_name"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/colorBlue"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="20dp"
+                                    android:layout_width="match_parent"
+                                    android:gravity="left"
+                                    android:layout_marginBottom="10dp"/>
+
+                                <TextView
+                                    android:text="Name"
+                                    android:textColor="@color/grey"
+                                    android:textStyle="bold"
+                                    android:id="@+id/tv_name"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="20dp"
+                                    android:layout_width="match_parent"
+                                    android:gravity="left"
+                                    android:layout_marginBottom="10dp"/>
+
+                                <TextView
+                                    android:text="CPF"
+                                    android:id="@+id/tv_cpf_number"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/grey"
+                                    android:textSize="15dp"
+                                    android:layout_width="match_parent"
+                                    android:gravity="left"
+                                    android:layout_marginBottom="10dp"/>
+
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_height="wrap_content"
+                            android:id="@+id/layout_confidence"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_weight="100"
+                            android:layout_below="@+id/layout_informations_professional">
+
+                            <TextView
+                                android:text="Confiança"
+                                android:textSize="20dp"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/grey"
+                                android:layout_width="match_parent"
+                                android:gravity="center"
+                                android:layout_marginTop="23dp"
+                                android:layout_weight="35"/>
+                            <RatingBar
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/confidence_bar"
+                                style="@style/StarRatingBar"
+                                android:stepSize="1"
+                                android:layout_marginTop="10dp"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_height="wrap_content"
+                            android:id="@+id/layout_quality"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:gravity="left"
+                            android:layout_weight="100"
+                            android:layout_below="@+id/layout_confidence">
+
+                            <TextView
+                                android:text="Qualidade"
+                                android:textSize="20dp"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/grey"
+                                android:layout_width="match_parent"
+                                android:gravity="center"
+                                android:layout_marginTop="23dp"
+                                android:layout_weight="35"/>
+                            <RatingBar
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/quality_bar"
+                                style="@style/StarRatingBar"
+                                android:stepSize="1"
+                                android:layout_marginTop="10dp"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_height="wrap_content"
+                            android:id="@+id/layout_time"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_weight="100"
+                            android:layout_below="@+id/layout_quality">
+
+                            <TextView
+                                android:text="Tempo"
+                                android:textSize="20dp"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/grey"
+                                android:layout_width="match_parent"
+                                android:gravity="left"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="23dp"
+                                android:layout_weight="35"/>
+                            <RatingBar
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/time_bar"
+                                style="@style/StarRatingBar"
+                                android:stepSize="1"
+                                android:layout_marginTop="10dp"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_height="wrap_content"
+                            android:id="@+id/layout_totality"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_weight="100"
+                            android:layout_below="@+id/layout_time">
+
+                            <TextView
+                                android:text="Total"
+                                android:textSize="20dp"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/grey"
+                                android:layout_width="match_parent"
+                                android:gravity="left"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="23dp"
+                                android:layout_weight="35"/>
+                            <RatingBar
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/totality_bar"
+                                style="@style/StarRatingBar"
+                                android:isIndicator="false"
+                                android:stepSize="1"
+                                android:layout_marginTop="10dp"/>
+
+                        </LinearLayout>
+
+
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linear"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/btn_evaluate"
+                        android:layout_width="300dp"
+                        android:layout_height="50dp"
+                        android:textAlignment="center"
+                        android:text="@string/btn_evaluate"
+                        android:gravity="center"
+                        android:textAllCaps="true"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="18sp"
+                        android:background="@drawable/screen_border"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="15dp"/>
+
+                </LinearLayout>
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
