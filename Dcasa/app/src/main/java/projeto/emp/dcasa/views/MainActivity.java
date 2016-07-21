@@ -82,6 +82,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     private android.support.v7.app.ActionBar actionBar;
     private CharSequence mTitle;
 
+    private TextView nameUser;
+    private TextView login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,11 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.add(R.id.map, mapFragment);
         ft.commit();
+
+        nameUser = (TextView) findViewById(R.id.nameUser);
+        nameUser.setText(preferences.getUserDetails().get(MySharedPreferences.KEY_NAME_USER));
+        login = (TextView) findViewById(R.id.login);
+        login.setText(preferences.getUserDetails().get(MySharedPreferences.KEY_LOGIN_USER));
 
         mapWrapperLayout = (MapWrapperLayout) findViewById(R.id.map_relative_layout);
 
@@ -413,8 +420,8 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
     }
 
     public void setmDrawer(ArrayList<NavItem> mNavItems) {
-        mNavItems.add(new NavItem("Avaliar Serviço", R.mipmap.light_blue_electrician_button));
-        mNavItems.add(new NavItem("Sair", R.mipmap.light_blue_electrician_button));
+        mNavItems.add(new NavItem("Avaliar Serviço", R.drawable.icon_review));
+        mNavItems.add(new NavItem("Sair", R.drawable.icon_leave));
 
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);

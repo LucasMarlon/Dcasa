@@ -26,6 +26,7 @@ public class UserCadastreActivity extends AppCompatActivity {
     private EditText email;
     private EditText password;
     private Button btn_cadastre;
+    private Button btn_login;
     private MySharedPreferences preferences;
 
 
@@ -41,6 +42,13 @@ public class UserCadastreActivity extends AppCompatActivity {
         phone = (EditText) findViewById(R.id.input_phone);
         email = (EditText) findViewById(R.id.input_email);
         password = (EditText) findViewById(R.id.input_password);
+        btn_login = (Button) findViewById(R.id.btn_login);
+        btn_login.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 setView(UserCadastreActivity.this, LoginActivity.class);
+             }
+        });
         btn_cadastre = (Button) findViewById(R.id.btn_cadastre);
         btn_cadastre.setOnClickListener(new View.OnClickListener() {
             @Override

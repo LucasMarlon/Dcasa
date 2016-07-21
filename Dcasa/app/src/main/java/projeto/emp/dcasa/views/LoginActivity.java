@@ -17,6 +17,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btn_login2;
     private MySharedPreferences userLogged;
     private AlertDialog.Builder alert;
+    private Button btn_register2;
     Context context;
 
     @Override
@@ -26,6 +27,14 @@ public class LoginActivity extends AppCompatActivity {
 
         context = this;
         userLogged = new MySharedPreferences(getApplicationContext());
+
+        btn_register2 = (Button) findViewById(R.id.btn_register2);
+        btn_register2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setView(LoginActivity.this, UserCadastreActivity.class);
+            }
+        });
 
         btn_login2 = (Button) findViewById(R.id.btn_login2);
         btn_login2.setOnClickListener(new View.OnClickListener() {

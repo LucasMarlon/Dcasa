@@ -33,6 +33,7 @@ public class MySharedPreferences {
     public static final String KEY_TYPE_PROFESSIONAL = "typeProfessional";
     public static final String KEY_NUM_EVALUATIONS = "number_evaluations";
     public static final String KEY_PHONE_PROFESSIONAL = "phone_professional";
+    public static final String KEY_CPF_PROFESSIONAL = "cpf_professional";
 
     public MySharedPreferences(Context context){
         this.mContext = context;
@@ -100,20 +101,22 @@ public class MySharedPreferences {
     }
 
     public void deselectProfessional(){
-        mEditor.putBoolean(IS_PROFESSIONAL_SELECTED, true);
+        mEditor.putBoolean(IS_PROFESSIONAL_SELECTED, false);
         mEditor.putString(KEY_NAME_PROFESSIONAL, null);
         mEditor.putString(KEY_lAST_NAME_USER, null);
         mEditor.putString(KEY_TYPE_PROFESSIONAL, null);
+        mEditor.putString(KEY_CPF_PROFESSIONAL, null);
         mEditor.putFloat(KEY_NUM_EVALUATIONS, 0);
         mEditor.commit();
     }
 
-    public HashMap<String, String> getProfessionalDetails(){
-        HashMap<String, String> professionalDetails = new HashMap<String, String>();
+    public HashMap<String, Object> getProfessionalDetails(){
+        HashMap<String, Object> professionalDetails = new HashMap<>();
         professionalDetails.put(KEY_NAME_PROFESSIONAL, mPref.getString(KEY_NAME_PROFESSIONAL, null));
         professionalDetails.put(KEY_PHONE_PROFESSIONAL, mPref.getString(KEY_PHONE_PROFESSIONAL, null));
         professionalDetails.put(KEY_TYPE_PROFESSIONAL, mPref.getString(KEY_TYPE_PROFESSIONAL, null));
-        professionalDetails.put(KEY_NUM_EVALUATIONS, mPref.getString(KEY_NUM_EVALUATIONS, null));
+        professionalDetails.put(KEY_CPF_PROFESSIONAL, mPref.getString(KEY_CPF_PROFESSIONAL, null));
+        professionalDetails.put(KEY_NUM_EVALUATIONS, mPref.getFloat(KEY_NUM_EVALUATIONS.toString(), 0));
 
         return professionalDetails;
     }
